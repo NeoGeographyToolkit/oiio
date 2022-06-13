@@ -149,7 +149,6 @@ add_subdirectory (src/libutil)
 
 find_or_download_robin_map ()
 
-
 # Add IO plugin directories -- if we are embedding plugins, we need to visit
 # these directories BEFORE the OpenImageIO target is established (in
 # src/libOpenImageIO). For each plugin, we append to the lists of source
@@ -235,159 +234,159 @@ install (FILES src/cmake/modules/FindOpenImageIO.cmake
 #                    for "make testall", but not "make test".
 #
 
-# Make a build/platform/testsuite directory, and copy the master runtest.py
-# there. The rest is up to the tests themselves.
-file (MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/testsuite")
-add_custom_command (OUTPUT "${CMAKE_BINARY_DIR}/testsuite/runtest.py"
-                    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                        "${CMAKE_SOURCE_DIR}/testsuite/runtest.py"
-                        "${CMAKE_BINARY_DIR}/testsuite/runtest.py"
-                    MAIN_DEPENDENCY "${CMAKE_SOURCE_DIR}/testsuite/runtest.py")
-add_custom_target ( CopyFiles ALL DEPENDS "${CMAKE_BINARY_DIR}/testsuite/runtest.py" )
+# # Make a build/platform/testsuite directory, and copy the master runtest.py
+# # there. The rest is up to the tests themselves.
+# file (MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/testsuite")
+# add_custom_command (OUTPUT "${CMAKE_BINARY_DIR}/testsuite/runtest.py"
+#                     COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#                         "${CMAKE_SOURCE_DIR}/testsuite/runtest.py"
+#                         "${CMAKE_BINARY_DIR}/testsuite/runtest.py"
+#                     MAIN_DEPENDENCY "${CMAKE_SOURCE_DIR}/testsuite/runtest.py")
+# add_custom_target ( CopyFiles ALL DEPENDS "${CMAKE_BINARY_DIR}/testsuite/runtest.py" )
 
-# Basic tests that apply even to continuous integration tests:
-#   Tests that require oiio-images:
-oiio_add_tests (gpsread
-                oiiotool oiiotool-attribs oiiotool-readerror oiiotool-xform
-                oiiotool-fixnan ## maketx & oiiotool-maketx depend on this
-                maketx oiiotool-maketx
-                misnamed-file
-                dpx ico iff png psd rla sgi zfile
-                texture-interp-bicubic
-                texture-blurtube
-                texture-crop texture-cropover
-                texture-derivs texture-fill texture-filtersize
-                texture-flipt texture-gettexels texture-gray
-                texture-mip-nomip texture-mip-trilinear
-                texture-overscan texture-pointsample
-                texture-uint8
-                texture-width0blur
-                texture-fat texture-skinny texture-wrapfill
-                texture-missing texture-res texture-udim texture-udim2
-                IMAGEDIR oiio-images
-              )
+# # Basic tests that apply even to continuous integration tests:
+# #   Tests that require oiio-images:
+# oiio_add_tests (gpsread
+#                 oiiotool oiiotool-attribs oiiotool-readerror oiiotool-xform
+#                 oiiotool-fixnan ## maketx & oiiotool-maketx depend on this
+#                 maketx oiiotool-maketx
+#                 misnamed-file
+#                 dpx ico iff png psd rla sgi zfile
+#                 texture-interp-bicubic
+#                 texture-blurtube
+#                 texture-crop texture-cropover
+#                 texture-derivs texture-fill texture-filtersize
+#                 texture-flipt texture-gettexels texture-gray
+#                 texture-mip-nomip texture-mip-trilinear
+#                 texture-overscan texture-pointsample
+#                 texture-uint8
+#                 texture-width0blur
+#                 texture-fat texture-skinny texture-wrapfill
+#                 texture-missing texture-res texture-udim texture-udim2
+#                 IMAGEDIR oiio-images
+#               )
 
-#   Tests that require openexr-images:
-oiio_add_tests (oiiotool-deep
-                IMAGEDIR openexr-images
-              )
+# #   Tests that require openexr-images:
+# oiio_add_tests (oiiotool-deep
+#                 IMAGEDIR openexr-images
+#               )
 
-#   Remaining freestanding tests:
-oiio_add_tests (nonwhole-tiles
-                oiiotool-composite oiiotool-copy
-                oiiotool-pattern
-                oiiotool-subimage oiiotool-text
-                diff
-                dither dup-channels
-                jpeg-corrupt
-                null psd-colormodes
-                rational
-              )
+# #   Remaining freestanding tests:
+# oiio_add_tests (nonwhole-tiles
+#                 oiiotool-composite oiiotool-copy
+#                 oiiotool-pattern
+#                 oiiotool-subimage oiiotool-text
+#                 diff
+#                 dither dup-channels
+#                 jpeg-corrupt
+#                 null psd-colormodes
+#                 rational
+#               )
 
-# Travis + old libjpeg seems to not catch an error in this test, skip it
-# for that case.
-if (JPEG_TURBO_FOUND OR NOT DEFINED ENV{TRAVIS})
-    oiio_add_tests (jpeg-corrupt-header)
-endif()
+# # Travis + old libjpeg seems to not catch an error in this test, skip it
+# # for that case.
+# if (JPEG_TURBO_FOUND OR NOT DEFINED ENV{TRAVIS})
+#     oiio_add_tests (jpeg-corrupt-header)
+# endif()
 
-# Add tests that require the Python bindings if we built the Python
-# bindings. This is mostly the test that are specifically about testing
-# the Python bindings themselves, but also a handful of tests that are
-# mainly about other things but happen to use Python in order to perform
-# thee test.
-# We also exclude these tests if this is a sanitizer build on Linux,
-# because the Python interpreter itself won't be linked with the right asan
-# libraries to run correctly.
-if (USE_PYTHON AND NOT BUILD_OIIOUTIL_ONLY)
-    if (NOT SANITIZE_ON_LINUX)
-        oiio_add_tests (
-                python-typedesc python-imagespec python-roi python-deep
-                python-imageinput python-imageoutput
-                python-imagebuf python-imagebufalgo
-                IMAGEDIR oiio-images
-            )
-    endif ()
-endif ()
+# # Add tests that require the Python bindings if we built the Python
+# # bindings. This is mostly the test that are specifically about testing
+# # the Python bindings themselves, but also a handful of tests that are
+# # mainly about other things but happen to use Python in order to perform
+# # thee test.
+# # We also exclude these tests if this is a sanitizer build on Linux,
+# # because the Python interpreter itself won't be linked with the right asan
+# # libraries to run correctly.
+# if (USE_PYTHON AND NOT BUILD_OIIOUTIL_ONLY)
+#     if (NOT SANITIZE_ON_LINUX)
+#         oiio_add_tests (
+#                 python-typedesc python-imagespec python-roi python-deep
+#                 python-imageinput python-imageoutput
+#                 python-imagebuf python-imagebufalgo
+#                 IMAGEDIR oiio-images
+#             )
+#     endif ()
+# endif ()
 
-# Add tests that require OCIO
-if (USE_OCIO AND OCIO_FOUND)
-    oiio_add_tests (oiiotool-color)
-endif ()
+# # Add tests that require OCIO
+# if (USE_OCIO AND OCIO_FOUND)
+#     oiio_add_tests (oiiotool-color)
+# endif ()
 
-# Advanced tests that are done by hand and for releases:
-# FIXME -- at some point, try to fix these or provide new ref images
-if (NOT DEFINED ENV{TRAVIS})
-oiio_add_tests (
-                texture-half texture-uint16
-                texture-interp-bilinear
-                texture-interp-closest
-                texture-mip-onelevel
-                texture-icwrite
-               )
-endif ()
+# # Advanced tests that are done by hand and for releases:
+# # FIXME -- at some point, try to fix these or provide new ref images
+# if (NOT DEFINED ENV{TRAVIS})
+# oiio_add_tests (
+#                 texture-half texture-uint16
+#                 texture-interp-bilinear
+#                 texture-interp-closest
+#                 texture-mip-onelevel
+#                 texture-icwrite
+#                )
+# endif ()
 
-# List testsuites which need special external reference images from the web
-# here:
-oiio_add_tests (bmp
-    IMAGEDIR bmpsuite
-    URL http://entropymine.com/jason/bmpsuite/bmpsuite.zip)
+# # List testsuites which need special external reference images from the web
+# # here:
+# oiio_add_tests (bmp
+#     IMAGEDIR bmpsuite
+#     URL http://entropymine.com/jason/bmpsuite/bmpsuite.zip)
 
-oiio_add_tests (tiff-suite tiff-depths tiff-misc
-    IMAGEDIR libtiffpic
-    URL http://www.simplesystems.org/libtiff/images.html)
+# oiio_add_tests (tiff-suite tiff-depths tiff-misc
+#     IMAGEDIR libtiffpic
+#     URL http://www.simplesystems.org/libtiff/images.html)
 
-oiio_add_tests (openexr-suite openexr-multires openexr-chroma openexr-v2 perchannel
-    IMAGEDIR openexr-images
-    URL http://www.openexr.com/downloads.html)
+# oiio_add_tests (openexr-suite openexr-multires openexr-chroma openexr-v2 perchannel
+#     IMAGEDIR openexr-images
+#     URL http://www.openexr.com/downloads.html)
 
-oiio_add_tests (gif
-    FOUNDVAR GIF_FOUND
-    IMAGEDIR oiio-images
-    URL "Recent checkout of oiio-images")
+# oiio_add_tests (gif
+#     FOUNDVAR GIF_FOUND
+#     IMAGEDIR oiio-images
+#     URL "Recent checkout of oiio-images")
 
-oiio_add_tests (jpeg2000
-    FOUNDVAR OPENJPEG_FOUND
-    IMAGEDIR j2kp4files_v1_5
-    URL http://www.itu.int/net/ITU-T/sigdb/speimage/ImageForm-s.aspx?val=10100803)
+# oiio_add_tests (jpeg2000
+#     FOUNDVAR OPENJPEG_FOUND
+#     IMAGEDIR j2kp4files_v1_5
+#     URL http://www.itu.int/net/ITU-T/sigdb/speimage/ImageForm-s.aspx?val=10100803)
 
-oiio_add_tests (pnm
-    IMAGEDIR oiio-images/pnm
-    URL "Recent checkout of oiio-images")
+# oiio_add_tests (pnm
+#     IMAGEDIR oiio-images/pnm
+#     URL "Recent checkout of oiio-images")
 
-oiio_add_tests (raw
-    FOUNDVAR LIBRAW_FOUND
-    IMAGEDIR oiio-images/raw
-    URL "Recent checkout of oiio-images")
+# oiio_add_tests (raw
+#     FOUNDVAR LIBRAW_FOUND
+#     IMAGEDIR oiio-images/raw
+#     URL "Recent checkout of oiio-images")
 
-oiio_add_tests (targa-tgautils
-    IMAGEDIR TGAUTILS
-    URL http://tgautils.inequation.org/)
+# oiio_add_tests (targa-tgautils
+#     IMAGEDIR TGAUTILS
+#     URL http://tgautils.inequation.org/)
 
-oiio_add_tests (fits
-    IMAGEDIR fits-images
-    URL http://www.cv.nrao.edu/fits/data/tests/)
+# oiio_add_tests (fits
+#     IMAGEDIR fits-images
+#     URL http://www.cv.nrao.edu/fits/data/tests/)
 
-oiio_add_tests (webp
-    FOUNDVAR WEBP_FOUND
-    IMAGEDIR oiio-images/webp
-    URL "Recent checkout of oiio-images")
+# oiio_add_tests (webp
+#     FOUNDVAR WEBP_FOUND
+#     IMAGEDIR oiio-images/webp
+#     URL "Recent checkout of oiio-images")
 
-oiio_add_tests (ptex
-    FOUNDVAR PTEX_FOUND)
+# oiio_add_tests (ptex
+#     FOUNDVAR PTEX_FOUND)
 
-oiio_add_tests (texture-field3d field3d
-    FOUNDVAR FIELD3D_FOUND)
+# oiio_add_tests (texture-field3d field3d
+#     FOUNDVAR FIELD3D_FOUND)
 
 
-oiio_add_tests (openvdb
-    FOUNDVAR OPENVDB_FOUND)
+# oiio_add_tests (openvdb
+#     FOUNDVAR OPENVDB_FOUND)
 
-if (SPI_TESTS)
-  oiio_add_tests (oiiotool-spi
-    FOUNDVAR SPI_TESTS
-    IMAGEDIR spi-oiio-tests
-    URL "noplace -- it's SPI specific tests")
-endif ()
+# if (SPI_TESTS)
+#   oiio_add_tests (oiiotool-spi
+#     FOUNDVAR SPI_TESTS
+#     IMAGEDIR spi-oiio-tests
+#     URL "noplace -- it's SPI specific tests")
+# endif ()
 
 
 
