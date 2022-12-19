@@ -124,7 +124,7 @@ private:
 
 const TagMap& tiff_tagmap_ref ();
 const TagMap& exif_tagmap_ref ();
-const TagMap& gps_tagmap_ref ();
+  //const TagMap& gps_tagmap_ref ();
 const TagMap& canon_maker_tagmap_ref ();
 
 cspan<ExplanationTableEntry> canon_explanation_table ();

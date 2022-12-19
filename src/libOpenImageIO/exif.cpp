@@ -153,8 +153,8 @@ tag_lookup(string_view domain, int tag)
     const TagMap* tm = nullptr;
     if (domain == "Exif")
         tm = &exif_tagmap_ref();
-    else if (domain == "GPS")
-        tm = &gps_tagmap_ref();
+    //else if (domain == "GPS")
+    //    tm = &gps_tagmap_ref();
     else
         tm = &tiff_tagmap_ref();
     return tm ? tm->find(tag) : nullptr;
@@ -168,8 +168,8 @@ tag_lookup(string_view domain, string_view tag)
     const TagMap* tm = nullptr;
     if (domain == "Exif")
         tm = &exif_tagmap_ref();
-    else if (domain == "GPS")
-        tm = &gps_tagmap_ref();
+    //else if (domain == "GPS")
+    //    tm = &gps_tagmap_ref();
     else
         tm = &tiff_tagmap_ref();
     return tm ? tm->find(tag) : nullptr;
@@ -552,7 +552,7 @@ pvt::exif_tagmap_ref()
     return T;
 }
 
-
+#if 0
 
 enum GPSTag {
     GPSTAG_VERSIONID         = 0,
@@ -625,14 +625,14 @@ static const TagInfo gps_tag_table[] = {
     { GPSTAG_HPOSITIONINGERROR,	"GPS:HPositioningError",TIFF_RATIONAL, 1 }
     // clang-format on
 };
+#endif
 
-
-const TagMap&
-pvt::gps_tagmap_ref()
-{
-    static TagMap T("GPS", gps_tag_table);
-    return T;
-}
+// const TagMap&
+// pvt::gps_tagmap_ref()
+// {
+//     static TagMap T("GPS", gps_tag_table);
+//     return T;
+// }
 
 
 
@@ -641,8 +641,8 @@ tag_table(string_view tablename)
 {
     if (tablename == "Exif")
         return cspan<TagInfo>(exif_tag_table);
-    if (tablename == "GPS")
-        return cspan<TagInfo>(gps_tag_table);
+    //;if (tablename == "GPS")
+    //  return cspan<TagInfo>(gps_tag_table);
     // if (tablename == "TIFF")
     return cspan<TagInfo>(tiff_tag_table);
 }
@@ -783,7 +783,7 @@ read_exif_tag(ImageSpec& spec, const TIFFDirEntry* dirp, cspan<uint8_t> buf,
     }
 
     const TagMap& exif_tagmap(exif_tagmap_ref());
-    const TagMap& gps_tagmap(gps_tagmap_ref());
+    //const TagMap& gps_tagmap(gps_tagmap_ref());
 
     // Make a copy of the pointed-to TIFF directory, swab the components
     // if necessary.
@@ -849,11 +849,11 @@ read_exif_tag(ImageSpec& spec, const TIFFDirEntry* dirp, cspan<uint8_t> buf,
                   << dir.tdir_offset << "\n";
         std::cerr << "EXIF Number of directory entries = " << ndirs << "\n";
 #endif
-        for (int d = 0; d < ndirs; ++d)
-            read_exif_tag(
-                spec, (const TIFFDirEntry*)(ifd + 2 + d * sizeof(TIFFDirEntry)),
-                buf, swab, offset_adjustment, ifd_offsets_seen,
-                dir.tdir_tag == TIFFTAG_EXIFIFD ? exif_tagmap : gps_tagmap);
+//         for (int d = 0; d < ndirs; ++d)
+//             read_exif_tag(
+//                 spec, (const TIFFDirEntry*)(ifd + 2 + d * sizeof(TIFFDirEntry)),
+//                 buf, swab, offset_adjustment, ifd_offsets_seen,
+//                 dir.tdir_tag ==  exif_tagmap);
 #if DEBUG_EXIF_READ
         std::cerr << "> End EXIF\n";
 #endif
@@ -1197,7 +1197,7 @@ void
 encode_exif(const ImageSpec& spec, std::vector<char>& blob)
 {
     const TagMap& exif_tagmap(exif_tagmap_ref());
-    const TagMap& gps_tagmap(gps_tagmap_ref());
+    //const TagMap& gps_tagmap(gps_tagmap_ref());
     // const TagMap& canon_tagmap (pvt::canon_maker_tagmap_ref());
 
     // Reserve maximum space that an APP1 can take in a JPEG file, so
@@ -1257,9 +1257,9 @@ encode_exif(const ImageSpec& spec, std::vector<char>& blob)
     for (const ParamValue& p : spec.extra_attribs) {
         // Which tag domain are we using?
         if (Strutil::starts_with(p.name(), "GPS:")) {
-            int tag = gps_tagmap.tag(p.name());
-            if (tag >= 0)
-                encode_exif_entry(p, tag, gpsdirs, blob, gps_tagmap, tiffstart);
+          //int tag = gps_tagmap.tag(p.name());
+          //   if (tag >= 0)
+          //      encode_exif_entry(p, tag, gpsdirs, blob, gps_tagmap, tiffstart);
         } else {
             // Not GPS
             int tag = exif_tagmap.tag(p.name());
