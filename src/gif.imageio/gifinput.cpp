@@ -453,7 +453,7 @@ GIFInput::report_last_error(void)
     error("%s", GifErrorString());
 #else
     spin_lock lock(gif_error_mutex);
-    error("GIF error %d", GifLastError());
+    error("GIF error");
 #endif
 }
 
