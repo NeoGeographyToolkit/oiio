@@ -1305,8 +1305,8 @@ encode_exif(const ImageSpec& spec, std::vector<char>& blob)
     if (gpsdirs.size()) {
         // Add some required Exif tags that wouldn't be in the spec
         static char ver[] = { 2, 2, 0, 0 };
-        int GPSTAG_VERSIONID = 0;
-        append_tiff_dir_entry(gpsdirs, blob, GPSTAG_VERSIONID, TIFF_BYTE, 4,
+        int gps_tag_id = 0;
+        append_tiff_dir_entry(gpsdirs, blob, gps_tag_id, TIFF_BYTE, 4,
                               &ver, tiffstart);
     }
 
