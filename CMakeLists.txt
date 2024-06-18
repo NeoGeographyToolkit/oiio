@@ -52,6 +52,7 @@ if (CMAKE_USE_FOLDERS)
 endif ()
 
 find_package(OpenEXR REQUIRED)
+message(STATUS "OpenEXR libs and dependencies: " ${ILMBASE_LIBRARIES} ${OPENEXR_LIBRARIES} ${ZLIB_LIBRARIES})
 
 include (GNUInstallDirs)
 

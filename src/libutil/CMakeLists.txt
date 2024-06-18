@@ -1,3 +1,5 @@
+find_package(OpenEXR REQUIRED)
+
 set (libOpenImageIO_Util_srcs argparse.cpp benchmark.cpp
                   errorhandler.cpp filesystem.cpp
                   farmhash.cpp filter.cpp hashes.cpp paramlist.cpp
@@ -15,7 +17,7 @@ target_link_libraries (OpenImageIO_Util ${Boost_LIBRARIES})
 if (WIN32)
     target_link_libraries (OpenImageIO_Util psapi.lib)
 endif ()
-target_link_libraries (OpenImageIO_Util ${ILMBASE_LIBRARIES})
+target_link_libraries (OpenImageIO_Util ${OPENEXR_LIBRARIES})
 
 if (VERBOSE)
     message(STATUS "Setting SOVERSION to: ${SOVERSION}")

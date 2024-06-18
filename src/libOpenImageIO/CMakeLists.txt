@@ -1,3 +1,5 @@
+find_package(OpenEXR REQUIRED)
+
 if (VERBOSE)
    message (STATUS "Create imagio_pvt.h from imageio_pvt.h.in")
 endif ()
@@ -17,6 +19,9 @@ if (NOT USE_EXTERNAL_PUGIXML)
                                      PROPERTIES COMPILE_FLAGS -Wno-error=placement-new)
     endif ()
 endif()
+
+find_package(OpenEXR REQUIRED)
+message(STATUS "OpenEXR libs and dependencies: " ${ILMBASE_LIBRARIES} ${OPENEXR_LIBRARIES} ${ZLIB_LIBRARIES})
 
 # Make the build complete for newer ffmpeg versions (3.1.1+) that have
 # marked m_format_context->streams[i]->codec as deprecated.
@@ -172,8 +177,10 @@ if (USE_EXTERNAL_PUGIXML)
     target_link_libraries (OpenImageIO ${PUGIXML_LIBRARIES})
 endif ()
 
-target_link_libraries (OpenImageIO ${ILMBASE_LIBRARIES})
+message(STATUS "EXR libraries: " ${ILMBASE_LIBRARIES} ${OPENEXR_LIBRARIES} ${ZLIB_LIBRARIES})
+
 target_link_libraries (OpenImageIO ${OPENEXR_LIBRARIES})
+target_link_libraries (OpenImageIO ${ILMBASE_LIBRARIES})
 target_link_libraries (OpenImageIO ${ZLIB_LIBRARIES})
 
 if (VERBOSE)
