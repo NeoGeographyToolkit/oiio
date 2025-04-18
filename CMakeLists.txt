@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.2.2)
+cmake_minimum_required (VERSION 3.15)
 cmake_policy (SET CMP0048 NEW)  # Allow VERSION specifier in project()
 project (OpenImageIO
          VERSION 2.0.4
